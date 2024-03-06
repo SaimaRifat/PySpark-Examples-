@@ -1,1 +1,30 @@
-This is going to cover basics of Pyspark. Like creating data frame, selecting columns, fltering rows, etc.
+# This is going to cover basics of Pyspark. Like creating data frame, renaming and selecting columns, fltering rows.
+
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+
+# Create SparkSession 
+spark = SparkSession.builder \
+      .master("local[1]") \
+      .appName("SparkByExamples.com") \
+      .getOrCreate() 
+
+data=[(1,'John','Snow', 22),
+(2,'Daenerys', 'Targaryean', 21),
+(3, 'Arya', 'Stark', 15)]
+
+columns= ['id','f_name', 'l_name','age']
+
+df=spark.createDataFrame(data=data, schema=columns)
+df.show()
+
+df_ren=df.withColumnRenamed("f_name","Firstname")\
+    .withColumnRenamed("l_name","LastName")
+df_ren.show()
+
+df_sel=df_ren.select('FirstName','LastName','age')
+df_sel.show()
+
+df_filt=df_sel.filter('age>=17')
+df_filt.show()
